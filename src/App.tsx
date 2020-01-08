@@ -1,29 +1,67 @@
-import React, { KeyboardEvent } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import 'antd/dist/antd.css';
-import { Input } from 'antd';
+import React, { ChangeEvent, useState } from 'react';
 import axios from 'axios';
+import { Button, Icon, Input } from 'antd';
+import 'antd/dist/antd.css';
+
+import './App.css';
+import {apiUrl} from "./config";
 
 const App: React.FC = () => {
-  const onSubmit = ({ currentTarget }: KeyboardEvent<HTMLInputElement>) => {
+  const [newChannel, setNewChannel] = useState('');
+  const [deleteChannel, setDeleteChannel] = useState('');
+  const onChangeNewChannel = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    setNewChannel(target.value)
+  };
+  const onChangeDeleteChannel = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    setDeleteChannel(target.value)
+  };
+  const onSubmit = ({ currentTarget }: any) => {
     const name = currentTarget.value;
-    axios.post('https://tiberius-bot.herokuapp.com/channels', { name });
+    axios.post(`${apiUrl}/channels`, { name });
+  };
+
+  const onDelete =  ({ currentTarget }: any) => {
+    const name = currentTarget.value;
+    axios.delete(`${apiUrl}/channels/${name}`);
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src="https://st4.depositphotos.com/1415902/31584/v/450/depositphotos_315845546-stock-illustration-julius-caesar-roman-politician-and.jpg" className="App-logo" alt="logo" />
         <p>
           Добавь свой канал, Тиберий подключится:
         </p>
         <div className="Input-section">
           <Input
+            onChange={onChangeNewChannel}
+            value={newChannel}
+            className="Channel-input"
             placeholder="Название канала"
             size="large"
             onPressEnter={onSubmit}
           />
+          <Button onClick={onSubmit} className="Submit-button" type="primary">
+            Старт
+            <Icon type="right" />
+          </Button>
+        </div>
+        <p>
+          Или...
+        </p>
+        <div className="Input-section">
+          <Input
+            onChange={onChangeDeleteChannel}
+            value={deleteChannel}
+            className="Channel-input"
+            placeholder="Имя дезертира"
+            size="large"
+            onPressEnter={onDelete}
+          />
+          <Button onClick={onDelete} className="Submit-button" type="danger">
+            Отключиться
+            <Icon type="right" />
+          </Button>
         </div>
       </header>
     </div>
