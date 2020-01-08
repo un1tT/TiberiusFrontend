@@ -8,7 +8,7 @@ import axios from 'axios';
 const App: React.FC = () => {
   const onSubmit = ({ currentTarget }: KeyboardEvent<HTMLInputElement>) => {
     const name = currentTarget.value;
-    axios.post('http://tiberius-bot.herokuapp.com/channels', { name });
+    axios.post('https://tiberius-bot.herokuapp.com/channels', { name });
   };
 
   return (
