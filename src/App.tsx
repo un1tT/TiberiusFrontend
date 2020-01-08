@@ -15,14 +15,12 @@ const App: React.FC = () => {
   const onChangeDeleteChannel = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setDeleteChannel(target.value)
   };
-  const onSubmit = ({ currentTarget }: any) => {
-    const name = currentTarget.value;
-    axios.post(`${apiUrl}/channels`, { name });
+  const onSubmit = () => {
+    axios.post(`${apiUrl}/channels`, { name: newChannel });
   };
 
-  const onDelete =  ({ currentTarget }: any) => {
-    const name = currentTarget.value;
-    axios.delete(`${apiUrl}/channels/${name}`);
+  const onDelete =  () => {
+    axios.delete(`${apiUrl}/channels/${deleteChannel}`);
   };
 
   return (
