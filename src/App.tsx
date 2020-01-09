@@ -12,10 +12,14 @@ const App: React.FC = () => {
   const [amount, setAmount] = useState(0);
 
   useEffect(() => {
+    fetchChannels();
+  }, []);
+
+  const fetchChannels = async () => {
     axios.get(`${apiUrl}/channels`).then(({ data }) => {
       setAmount(data.length);
     });
-  }, []);
+  };
 
   const onChangeNewChannel = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setNewChannel(target.value)
@@ -26,8 +30,21 @@ const App: React.FC = () => {
   const onSubmit = () => {
     axios.post(`${apiUrl}/channels`, { name: newChannel })
       .then(() => {
-        showSuccessMessage(newChannel, 'принят в легион!')
+        showSuccessMessage(newChannel, 'принят в легион!');
+        fetchChannels();
         setNewChannel('');
+      })
+      .catch(() => {
+        showErrorMessage();
+      })
+  };
+
+  const onDelete =  () => {
+    axios.delete(`${apiUrl}/channels/${deleteChannel}`)
+      .then(() => {
+        showSuccessMessage(deleteChannel, 'разжалован!');
+        fetchChannels();
+        setDeleteChannel('');
       })
       .catch(() => {
         showErrorMessage();
@@ -40,17 +57,6 @@ const App: React.FC = () => {
 
   const showErrorMessage = () => {
     message.error('Цезари тоже ошибаются, что-то пошло не так...');
-  };
-
-  const onDelete =  () => {
-    axios.delete(`${apiUrl}/channels/${deleteChannel}`)
-      .then(() => {
-        showSuccessMessage(deleteChannel, 'разжалован!');
-        setDeleteChannel('');
-      })
-      .catch(() => {
-        showErrorMessage();
-      })
   };
 
   return (
